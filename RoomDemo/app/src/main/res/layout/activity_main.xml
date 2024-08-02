@@ -1,19 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_user"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"/>
+    <EditText
+        android:id="@+id/et_id"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="400dp"
+        android:layout_marginLeft="80dp"
+        android:hint="ID" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/et_id"
+        android:layout_alignTop="@+id/et_id"
+        android:layout_marginLeft="50dp"
+        android:hint="姓名" />
+
+    <EditText
+        android:id="@+id/et_age"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/et_id"
+        android:layout_alignStart="@id/et_id"
+        android:hint="年龄" />
+
+    <EditText
+        android:id="@+id/et_address"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:hint="住址"
+        android:layout_below="@id/et_name"
+        android:layout_alignStart="@id/et_name"/>
+    <Button
+        android:id="@+id/btn_insert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_below="@id/et_age"
+        android:layout_alignStart="@id/et_age"
+        android:text="插入"/>
+    <Button
+        android:id="@+id/btn_delete"
+        android:layout_alignStart="@id/et_address"
+        android:layout_below="@id/et_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="删除"/>
+    <Button
+        android:id="@+id/btn_query"
+        android:layout_below="@id/btn_insert"
+        android:layout_alignStart="@id/btn_insert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询"/>
+    <Button
+        android:id="@+id/btn_update"
+        android:layout_alignStart="@id/btn_delete"
+        android:layout_below="@id/btn_insert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="更新"/>
+</RelativeLayout>
