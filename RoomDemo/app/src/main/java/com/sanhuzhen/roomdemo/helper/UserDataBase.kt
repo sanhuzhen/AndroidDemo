@@ -17,4 +17,9 @@ import com.sanhuzhen.roomdemo.bean.UserEntity
 abstract class UserDataBase : RoomDatabase() {
     //定义获取上面定义的UserDao的抽象方法
     abstract fun userDao(): UserDao
+
+    /**
+     * 新增方法得到UserFlowDao的实例
+     */
+    abstract fun userFlowDao(): UserFlowDao
 }

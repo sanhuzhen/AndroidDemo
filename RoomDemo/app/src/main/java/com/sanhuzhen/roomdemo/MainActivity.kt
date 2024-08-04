@@ -1,5 +1,6 @@
 package com.sanhuzhen.roomdemo
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -25,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         ).build()
     }
 
-    private val UserData = mutableListOf<UserEntity>()
 
     private val et_id by lazy { findViewById<EditText>(R.id.et_id) }
     private val et_name by lazy { findViewById<EditText>(R.id.et_name) }
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val bt_insert by lazy { findViewById<Button>(R.id.btn_insert) }
     private val bt_delete by lazy { findViewById<Button>(R.id.btn_delete) }
     private val bt_update by lazy { findViewById<Button>(R.id.btn_update) }
-    private val bt_query by lazy { findViewById<Button>(R.id.btn_query) }
+    private val bt_flow by lazy { findViewById<Button>(R.id.btn_flow) }
     private val rv_user by lazy { findViewById<RecyclerView>(R.id.recyclerView_user) }
     private val userAdapter by lazy { UserAdapter() }
 
@@ -51,9 +51,8 @@ class MainActivity : AppCompatActivity() {
                 withContext(Dispatchers.IO){
                     val userEntity = createUser()
                     userDataBase.userDao().insert(userEntity)
-                    UserData.add(userEntity)
                 }
-                userAdapter.submitList(UserData)
+                queryAllUser()
             }
         }
         bt_delete.setOnClickListener {
@@ -61,11 +60,8 @@ class MainActivity : AppCompatActivity() {
                 withContext(Dispatchers.IO){
                     val userEntity = createUser()
                     userDataBase.userDao().delete(userEntity)
-                    if (UserData.contains(userEntity)) {
-                        UserData.remove(userEntity)
-                    }
                 }
-                userAdapter.submitList(UserData)
+                queryAllUser()
             }
         }
         bt_update.setOnClickListener {
@@ -73,25 +69,12 @@ class MainActivity : AppCompatActivity() {
                 withContext(Dispatchers.IO){
                     val userEntity = createUser()
                     userDataBase.userDao().update(userEntity)
-                    if (UserData.contains(userEntity)) {
-                        UserData.remove(userEntity)
-                        UserData.add(userEntity)
-
-                    }
                 }
-                userAdapter.submitList(UserData)
+                queryAllUser()
             }
         }
-        bt_query.setOnClickListener {
-            lifecycleScope.launch {
-                val userEntity = userDataBase.userDao().queryById(1)
-                userEntity?.let {
-                    et_id.setText(it.id.toString())
-                    et_name.setText(it.name)
-                    et_age.setText(it.age.toString())
-                    et_address.setText(it.address)
-                }
-            }
+        bt_flow.setOnClickListener {
+            startActivity(Intent(this@MainActivity, MainFlowActivity::class.java))
         }
     }
 
@@ -109,6 +92,18 @@ class MainActivity : AppCompatActivity() {
         rv_user.apply {
             adapter = userAdapter
             layoutManager = LinearLayoutManager(this@MainActivity)
+        }
+    }
+
+    /**
+     * 从数据库查询所有数据
+     */
+    private fun queryAllUser() {
+        lifecycleScope.launch {
+            val userList = withContext(Dispatchers.IO){
+                userDataBase.userDao().queryAll()
+            }
+            userAdapter.submitList(userList)
         }
     }
 }
