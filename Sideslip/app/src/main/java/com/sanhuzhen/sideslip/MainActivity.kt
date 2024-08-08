@@ -1,6 +1,9 @@
 package com.sanhuzhen.sideslip
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val rvAdapter by lazy { RvAdapter() }
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,7 +32,9 @@ class MainActivity : AppCompatActivity() {
         val itemTouchHelperCallback = ItemTouchHelperCallback(rvAdapter)
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(rv)
-
+        findViewById<Button>(R.id.btn_slip).setOnClickListener {
+            startActivity(Intent(this,Main2Activity::class.java))
+        }
 
     }
     private fun initList() {
