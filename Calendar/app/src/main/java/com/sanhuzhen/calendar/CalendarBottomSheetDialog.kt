@@ -107,7 +107,6 @@ class CalendarBottomSheetDialog(context: Context) : BottomSheetDialog(context) {
         preButton = findViewById(R.id.per_month)!!
         nextButton = findViewById(R.id.next_month)!!
         month_text = findViewById(R.id.date_month)!!
-        day_gl = findViewById(R.id.data_day_gl)!!
         //初始化日历
         setupCalendar()
         initClick()

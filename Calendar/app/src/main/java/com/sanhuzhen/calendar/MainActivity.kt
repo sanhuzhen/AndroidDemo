@@ -10,8 +10,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val bottomSheetDialog = BottomSheetDialog(this)
-        val bottomSheetView = layoutInflater.inflate(R.layout.calendar_bottom_sheet, null)
+        val bottomSheetView = layoutInflater.inflate(R.layout.activity_dialog_additem, null)
         bottomSheetDialog.setContentView(bottomSheetView)
+        bottomSheetDialog.behavior.peekHeight = 1500
         findViewById<Button>(R.id.bt).setOnClickListener {
             bottomSheetDialog.show()
         }

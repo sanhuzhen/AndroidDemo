@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="700dp"
+    android:background="@drawable/todo_layer_list_bottom_sheet_back">
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:layout_margin="25dp"
+        android:textColor="@color/black"
+        android:text="取消"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:text="保存"
+        android:layout_alignParentRight="true"
+        android:layout_margin="25dp"
+        android:textColor="@color/Grey"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_additem"
+        android:layout_below="@+id/tv_cancel"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/et_type"
+        android:paddingLeft="20dp"
+        android:textSize="20sp"
+        android:hint="添加待办事项"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_additem"
+        android:layout_below="@+id/et_additem"
+        android:layout_marginTop="20dp"
+        android:layout_alignStart="@id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/time" />
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_toRightOf="@id/iv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/Grey"
+            android:text="选择时间"/>
+        <TextView
+            android:id="@+id/tv_time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_time"
+            android:layout_centerVertical="true"
+            android:textColor="@color/Blue"
+            android:layout_marginLeft="20sp"
+            android:text="7月30号 14:00"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_repeat"
+        android:layout_below="@+id/rl_additem"
+        android:layout_marginTop="20dp"
+        android:layout_alignStart="@id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_repeat"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/_4gl_repeat2" />
+
+        <TextView
+            android:id="@+id/tv_repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_toRightOf="@id/iv_repeat"
+            android:text="设置重复"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/Grey"
+            android:textSize="17sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_repeat"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_category"
+        android:layout_below="@+id/rl_repeat"
+        android:layout_marginTop="20dp"
+        android:layout_alignLeft="@id/tv_cancel"
+        android:layout_alignRight="@id/et_additem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_category"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/category" />
+        <TextView
+            android:id="@+id/tv_category"
+            android:layout_toRightOf="@id/iv_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/Grey"
+            android:text="分组"/>
+        <TextView
+            android:id="@+id/tv_category_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/iv_next"
+            android:layout_centerVertical="true"
+            android:textColor="@color/Blue"
+            android:layout_marginLeft="20sp"
+            android:text="其他"/>
+        <ImageView
+            android:id="@+id/iv_next"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/next"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

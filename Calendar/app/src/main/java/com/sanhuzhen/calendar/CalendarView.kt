@@ -61,7 +61,6 @@ class CalendarView @JvmOverloads constructor(
     private val nextButton: androidx.appcompat.widget.AppCompatButton
     private val month_text: TextView
     private val week_rv: RecyclerView
-    private val day_gl: GridLayout
 
     init {
         //加载布局
@@ -71,7 +70,6 @@ class CalendarView @JvmOverloads constructor(
         nextButton = findViewById(R.id.next_month)
         month_text = findViewById(R.id.date_month)
         week_rv = findViewById(R.id.data_week_rv)
-        day_gl = findViewById(R.id.data_day_gl)
         //初始化日历
         setupCalendar()
         initClick()
@@ -92,18 +90,6 @@ class CalendarView @JvmOverloads constructor(
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1 // 调整为零基索引
 
         var day = firstDayOfMonth
-        // 遍历GridLayout的所有子视图
-        for (i in 0 until day_gl.childCount) {
-            val cell = day_gl.getChildAt(i) as TextView
-            // 如果当前索引在当月第一天的星期几之后且小于等于当月的最后一天
-            if (i >= dayOfWeek && day <= lastDayOfMonth) {
-                // 设置日期
-                cell.text = day.toString()
-                day++
-            } else {
-                // 清空日期
-                cell.visibility = GONE
-            }
-        }
+
     }
 }

@@ -1,11 +1,14 @@
 package com.sanhuzhen.calendar
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
+import androidx.core.text.util.LocalePreferences.FirstDayOfWeek
 import java.util.Calendar
 
 /**
@@ -51,87 +54,150 @@ class CustomCalendarView @JvmOverloads constructor(
 ) : View(context, attrs) {
 
     /**
-     * 日历对象
+     * 创建 Calendar 对象实例
      */
     private val calendar: Calendar = Calendar.getInstance()
-    private var selectedDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+    private var year = calendar.get(Calendar.YEAR)
+    private var month = calendar.get(Calendar.MONTH)
+    private var day = calendar.get(Calendar.DAY_OF_MONTH)
+    private var selectedDay: Int = day
 
+    private val WeekString = arrayOf("一", "二", "三", "四", "五", "六", "日")
 
-    private val WeekStringList = listOf("一", "二", "三", "四", "五", "六", "日")
+    // 创建画笔
+    private val headerPaint = Paint().apply {
+        color = Color.BLACK
+        textSize = 30f
+        style = Paint.Style.FILL
+        isAntiAlias = true//抗锯齿
+    }
 
-    /**
-     * 画笔，第一个用来画出选中日期的圆圈
-     */
-    private val paint = Paint().apply {
+    private val buttonPaint = Paint().apply {
+        color = Color.GRAY
+        textSize = 35f
+        style = Paint.Style.FILL
+        isAntiAlias = true//抗锯齿
+    }
+
+    private val weekPaint = Paint().apply {
+        color = Color.GRAY
+        textSize = 25f
+        style = Paint.Style.FILL
+        isAntiAlias = true//抗锯齿
+    }
+
+    private val preDayPaint = Paint().apply {
+        color = Color.GRAY
+        textSize = 30f
+        style = Paint.Style.FILL
+        isAntiAlias = true//抗锯齿
+    }
+
+    private val currentDayPaint = Paint().apply {
+        color = Color.BLUE
+        textSize = 30f
+        style = Paint.Style.FILL
+        isAntiAlias = true//抗锯齿
+    }
+
+    private val nextDayPaint = Paint().apply {
+        color = Color.BLACK
+        textSize = 30f
+        style = Paint.Style.FILL
+        isAntiAlias = true//抗锯齿
+    }
+
+    private val selectPaint = Paint().apply {
         style = Paint.Style.STROKE //只描边
         color = Color.BLUE
-        strokeWidth = 5f
-    }
-
-    /**
-     *
-     */
-    private val textDayPaint = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.BLACK
-        textSize = 40f
+        strokeWidth = 2f
         isAntiAlias = true
     }
 
-    private val textWeekPaint = Paint().apply {
-        style = Paint.Style.FILL
-        color = Color.GRAY
-        textSize = 40f
-        isAntiAlias = true
-    }
-
-
+    @SuppressLint("DefaultLocale")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        /**
-         * 获取当前月份的总天数
-         */
-        val totalDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        //绘制头部
+        val headerText =
+            "${calendar.get(Calendar.YEAR)}/${
+                String.format(
+                    "%02d",
+                    calendar.get(Calendar.MONTH) + 1
+                )
+            }"
+        val HeaderWidth = width / 2 - headerPaint.measureText(headerText) / 2
+        val HeaderHeight = height * 0.1f - headerPaint.descent() / 2
+        canvas.drawText(headerText, HeaderWidth, HeaderHeight, headerPaint)
 
-        /**
-         * 获取每个日期的宽度和高度
-         */
-        val widthPerDay = width / 7f
-        val heightPerWeek = height / 6f
-        val horizontalPadding = (width - widthPerDay * 7) / 2f // 计算水平间距
-        val verticalPadding = (height - heightPerWeek * 6) / 2f // 计算垂直间距
+        //绘制按钮
+        val preButtonWidth = HeaderWidth - buttonPaint.measureText("<") * 3
+        val nextButtonWidth =
+            width / 2 + headerPaint.measureText(headerText) / 2 + buttonPaint.measureText(">") * 3
+        val buttonHeight = HeaderHeight
+        canvas.drawText("<", preButtonWidth, buttonHeight, buttonPaint)
+        canvas.drawText(">", nextButtonWidth, buttonHeight, buttonPaint)
 
-        for (day in 1..totalDays) {
-            val week = (day - 1) / 7
-            val dayOfWeek = (day - 1) % 7
+        //绘制星期
 
-            val cx = horizontalPadding + (dayOfWeek + 0.5f) * widthPerDay
-            val cy = verticalPadding + (week + 0.5f) * heightPerWeek
-
-            if (day == selectedDay) {
-                canvas.drawCircle(cx, cy + textDayPaint.textSize * 1.5f, Math.min(widthPerDay, heightPerWeek) / 2 - 10, paint)
-            }
-            if (day <= 7){
-                canvas.drawText(WeekStringList[day-1], cx - textWeekPaint.measureText(day.toString()) / 2, cy + textWeekPaint.textSize / 4, textWeekPaint)
-            }
-
-            canvas.drawText(day.toString(), cx - textDayPaint.measureText(day.toString()) / 2, cy + textDayPaint.textSize * 2, textDayPaint)
+        val weekWidth = width / 7
+        val weekHeight = HeaderHeight + 30
+        for (i in 0..6) {
+            val weekText = WeekString[i]
+            val weekTextWidth = weekWidth / 2 - weekPaint.measureText(weekText) / 2
+            canvas.drawText(
+                weekText,
+                weekTextWidth + i * weekWidth,
+                weekHeight + weekPaint.measureText(weekText),
+                weekPaint
+            )
         }
-    }
 
-    fun setSelectedDay(day: Int) {
-        selectedDay = day
-        invalidate()
-    }
+        //绘制日期
+        val totalDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
-    fun nextMonth() {
-        calendar.add(Calendar.MONTH, 1)
-        invalidate()
-    }
+        //获取当月第一天是星期几
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 2
+        for (i in 1..totalDay) {
+            val week = (firstDayOfWeek + i - 1) / 7
+            val dayWidth =
+                (firstDayOfWeek + i - 1) % 7 * weekWidth + weekWidth / 2 - preDayPaint.measureText(
+                    i.toString()
+                ) / 2
+            val dayHeight = weekHeight + weekPaint.measureText(WeekString[0]) + (week + 1) * 70
+            if (i == day && month == calendar.get(Calendar.MONTH) && year == calendar.get(Calendar.YEAR)) {
+                canvas.drawText(
+                    i.toString(),
+                    dayWidth,
+                    dayHeight,
+                    currentDayPaint
+                )
+                canvas.drawCircle(
+                    dayWidth + currentDayPaint.measureText(i.toString()) / 2f,
+                    dayHeight - currentDayPaint.measureText(i.toString()) / 3f,
+                    Math.min(
+                        currentDayPaint.measureText(i.toString()),
+                        currentDayPaint.measureText(i.toString())
+                    ),
+                    selectPaint
+                )
+            } else if (i < day) {
+                canvas.drawText(
+                    i.toString(),
+                    dayWidth,
+                    dayHeight,
+                    preDayPaint
+                )
+            } else if (i > day) {
+                canvas.drawText(
+                    i.toString(),
+                    dayWidth,
+                    dayHeight,
+                    nextDayPaint
+                )
+            }
+        }
 
-    fun previousMonth() {
-        calendar.add(Calendar.MONTH, -1)
-        invalidate()
     }
 }
